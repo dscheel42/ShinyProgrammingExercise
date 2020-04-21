@@ -112,9 +112,10 @@ ui <- dashboardPage(
                               ),
                               sliderInput(inputId = 'firstBiomarker',
                                           label = "Biomarker 1 Filter",
+                                          #values chosen based on observed min/max
                                           min = 0,
-                                          max = 1000,
-                                          value = c(0,1000)
+                                          max = 23,
+                                          value = c(0,23)
                                           ),
                               selectInput(inputId = 'secondBiomarker',
                                           label = "Biomarker 2 Filter",
