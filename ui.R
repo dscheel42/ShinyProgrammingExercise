@@ -48,7 +48,7 @@ ui <- dashboardPage(
                                           selected = "Yes"),
                               radioButtons(inputId = 'selCovariate',
                                            label = "Covariate Selection",
-                                           choices = c("sex","age","ALT",
+                                           choices = c("sex","age","race","ALT",
                                                        "CRP","IGA","firstBiomarker",
                                                        "secondBiomarker"),
                                            selected = "age"),
@@ -87,21 +87,27 @@ ui <- dashboardPage(
                                           choices = c("betweenArms","withinArm"),
                                           selected = "betweenArms"
                                           ),
+                              #need to make this a conditional panel
+                              selectInput(inputId = 'selTreatmentArm',
+                                          label = "Treatment Arm",
+                                          choices = c("All","placebo","drugX","combination"),
+                                          selected = c("All")
+                                          ),
                               selectInput(inputId = 'selectedValue',
                                           label = 'Laboratory Measurement',
-                                          choices = c("alt","crp","iga"),
+                                          choices = c("ALT","CRP","IGA"),
                                           selected = "ALT"
                                           ),
                               sliderInput(inputId = 'firstBiomarker',
                                           label = "Biomarker 1 Filter",
                                           min = 0,
-                                          max = 10,
-                                          value = c(0,10)
+                                          max = 1000,
+                                          value = c(0,1000)
                                           ),
                               selectInput(inputId = 'secondBiomarker',
                                           label = "Biomarker 2 Filter",
-                                          choices = c("all","low","medium","high"),
-                                          selected = "all"
+                                          choices = c("All","Low","Medium","High"),
+                                          selected = "All"
                                           ),
                               selectInput(inputId = 'measurementType',
                                           label = 'Type of Aggregation',
@@ -113,7 +119,7 @@ ui <- dashboardPage(
                                                       'medianChangeOverall'),
                                           selected = c('meanByTimePoint')
                                           ),
-                              selectInput(inputId = 'graphType',
+                              selectInput(inputId = 'graphTypeLongitudinal',
                                           label = 'Type of Graph',
                                           choices = c('boxPlot',
                                                       'summaryLine',
@@ -127,16 +133,14 @@ ui <- dashboardPage(
                               box(status = 'primary',
                                   solidHeader = T,
                                   width = 12,
-                                  title = "Graph"
+                                  title = "Graph",
+                                  plotOutput('longitudinalGraph')
                                   ),
                               box(status = 'primary',
                                   solidHeader = T,
                                   width = 12,
                                   title = "Tables",
-                                  tabBox(width = 12,
-                                         tabPanel(title = "Records"),
-                                         tabPanel(title = "Summary Statistics")
-                                         )
+                                  tableOutput('longitudinalTable')
                                   )
                               )
                           )

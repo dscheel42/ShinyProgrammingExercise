@@ -75,8 +75,12 @@ names(PatientByVisit) = c("USUBJID","ALT","CRP","IGA","firstBiomarker","secondBi
 TrialFrame = left_join(PatientLevelInfo,PatientByVisit,by = 'USUBJID') %>%
   mutate_if(is.integer,as.numeric)
 
-#Global so that is does not need to perform this operation when selected characteristics change
+#Global Frame for each tab so that it does not need to perform these operations when selected characteristics change
 screeningFrame = TrialFrame %>% filter(daysFromBaseline == -1)
+
+noScreenFrame = TrialFrame %>% 
+  filter(daysFromBaseline >= 0) %>%
+  mutate(daysFromBaseline = as.factor(daysFromBaseline))
 
 #Need to go back to following naming conventions on the race variable
 summary(TrialFrame$race)
