@@ -23,7 +23,8 @@ PatientLevelInfo$ACTARM = recode(PatientLevelInfo$ACTARM,
                                  `A: Drug X` = "drugX",
                                  `B: Placebo` = "placebo",
                                  `C: Combination` = "combination"
-                                 )
+                                 ) 
+PatientLevelInfo$ACTARM = forcats::fct_relevel(PatientLevelInfo$ACTARM,"placebo")
 
 #Change the naming scheme of PatientLevelInfo to begin with lowercase and capitalize each subsequent concactenated word
 #USUBJID remains the same because we will use it join LabValuesInfo and PatientLevelInfo
@@ -65,13 +66,29 @@ PatientByVisit = LabValuesInfo %>%
          ) %>%
   select(-c("VISIT_NUM","AVISIT"))
 
-names(PatientByVisit) = c("USUBJID","ALT","CRP","IGA","biomarker1","biomarker2",
+names(PatientByVisit) = c("USUBJID","ALT","CRP","IGA","firstBiomarker","secondBiomarker",
                           "diffALT","diffCRP","diffIGA","daysFromBaseline",
                           "endDiffBaselineALT","endDiffBaselineCRP","endDiffBaselineIGA")
 
 #Join together the PatientLevelInfo and PatientByVisit (formerly LabValuesInfo) frames
 
-TrialFrame = left_join(PatientLevelInfo,PatientByVisit,by = 'USUBJID')
+TrialFrame = left_join(PatientLevelInfo,PatientByVisit,by = 'USUBJID') %>%
+  mutate_if(is.integer,as.numeric)
+
+#Global so that is does not need to perform this operation when selected characteristics change
+screeningFrame = TrialFrame %>% filter(daysFromBaseline == -1)
 
 #Need to go back to following naming conventions on the race variable
 summary(TrialFrame$race)
+
+TrialFrame$sex = recode(TrialFrame$sex,'F' = 'Female',
+                        'M' = 'Male',
+                        'UNDIFFERENTIATED' = 'Undifferentiated'
+                        )
+
+TrialFrame$secondBiomarker = recode(TrialFrame$secondBiomarker, 'LOW' = 'Low',
+                                    'MEDIUM' = 'Medium',
+                                    'HIGH' = 'High'
+                                    )
+
+TrialFrame$secondBiomarker = forcats::fct_relevel(TrialFrame$secondBiomarker,"Low","Medium","High")

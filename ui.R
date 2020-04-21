@@ -48,8 +48,10 @@ ui <- dashboardPage(
                                           selected = "Yes"),
                               radioButtons(inputId = 'selCovariate',
                                            label = "Covariate Selection",
-                                           choices = c("Sex","Age"),
-                                           selected = "Age"),
+                                           choices = c("sex","age","ALT",
+                                                       "CRP","IGA","firstBiomarker",
+                                                       "secondBiomarker"),
+                                           selected = "age"),
                               selectInput(inputId = 'graphType',
                                           label = "Graph Display Type (Numeric)",
                                           choices = c("boxPlot","densityPlot"),
@@ -62,12 +64,14 @@ ui <- dashboardPage(
                               box(status = 'primary',
                                   solidHeader = T,
                                   width = 12,
-                                  title = "Graph"
+                                  title = "Graph",
+                                  plotOutput('selScreeningGraph')
                                   ),
                               box(status = 'primary',
                                   solidHeader = T,
                                   width = 12,
-                                  title = "Summary Statistics"
+                                  title = "Summary Statistics",
+                                  tableOutput('selScreeningTable')
                                   )
                               )
                           )
