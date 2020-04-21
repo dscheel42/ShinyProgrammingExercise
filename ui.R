@@ -48,14 +48,16 @@ ui <- dashboardPage(
                                           selected = "Yes"),
                               radioButtons(inputId = 'selCovariate',
                                            label = "Covariate Selection",
-                                           choices = c("sex","age","race","ALT",
-                                                       "CRP","IGA","firstBiomarker",
-                                                       "secondBiomarker"),
-                                           selected = "age"),
-                              selectInput(inputId = 'graphType',
-                                          label = "Graph Display Type (Numeric)",
-                                          choices = c("boxPlot","densityPlot"),
-                                          selected = "densityPlot")
+                                           choices = list("Sex" = "sex",
+                                                          "Age" = "age",
+                                                          "Race" = "race",
+                                                          "ALT" = "ALT",
+                                                          "CRP" = "CRP",
+                                                          "IGA" = "IGA",
+                                                          "Biomarker 1" = "firstBiomarker",
+                                                          "Biomarker 2" = "secondBiomarker"
+                                                          ),
+                                           selected = "age")
                               ),
                           box(status = 'primary',
                               solidHeader = T,
@@ -64,13 +66,13 @@ ui <- dashboardPage(
                               box(status = 'primary',
                                   solidHeader = T,
                                   width = 12,
-                                  title = "Graph",
+                                  title = "Distribution Plot",
                                   plotOutput('selScreeningGraph')
                                   ),
                               box(status = 'primary',
                                   solidHeader = T,
                                   width = 12,
-                                  title = "Summary Statistics",
+                                  title = "Summary Table",
                                   tableOutput('selScreeningTable')
                                   )
                               )
@@ -84,20 +86,30 @@ ui <- dashboardPage(
                               title = "Measurement and Filters",
                               selectInput(inputId = 'betweenWithin',
                                           label = "Between or Within Treatment Arm?",
-                                          choices = c("betweenArms","withinArm"),
+                                          choices = list("Compare Test Type Across Treatment Arms" = "betweenArms",
+                                                         "Compare Three Tests Within A Single Treatment Arm" = "withinArm"),
                                           selected = "betweenArms"
                                           ),
                               #need to make this a conditional panel
-                              selectInput(inputId = 'selTreatmentArm',
-                                          label = "Treatment Arm",
-                                          choices = c("All","placebo","drugX","combination"),
-                                          selected = c("All")
-                                          ),
-                              selectInput(inputId = 'selectedValue',
-                                          label = 'Laboratory Measurement',
-                                          choices = c("ALT","CRP","IGA"),
-                                          selected = "ALT"
-                                          ),
+                              conditionalPanel(condition = "input.betweenWithin == 'withinArm'",
+                                selectInput(inputId = 'selTreatmentArm',
+                                            label = "Treatment Arm",
+                                            choices = list("All" = "All",
+                                                           "Placebo" = "placebo",
+                                                           "Drug X" = "drugX",
+                                                           "Combination" = "combination"),
+                                            selected = c("All")
+                                            )
+                                ),
+                              conditionalPanel(condition = "input.betweenWithin == 'betweenArms'",
+                                selectInput(inputId = 'selectedValue',
+                                            label = 'Laboratory Measurement',
+                                            choices = list("Alanine Aminotransferase Measurement" = "ALT",
+                                                           "C-Reactive Protein Measurement" = "CRP",
+                                                           "Immunoglobulin A Measurement" = "IGA"),
+                                            selected = "ALT"
+                                            )
+                              ),
                               sliderInput(inputId = 'firstBiomarker',
                                           label = "Biomarker 1 Filter",
                                           min = 0,
@@ -111,19 +123,19 @@ ui <- dashboardPage(
                                           ),
                               selectInput(inputId = 'measurementType',
                                           label = 'Type of Aggregation',
-                                          choices = c('meanByTimepoint',
-                                                      'medianByTimepoint',
-                                                      'meanChangeTimepoint',
-                                                      'medianChangeTimepoint',
-                                                      'meanChangeOverall',
-                                                      'medianChangeOverall'),
-                                          selected = c('meanByTimePoint')
+                                          choices = list('Average At Each Time Point' = 'meanByTimepoint',
+                                                      'Median At Each Time Point' = 'medianByTimepoint',
+                                                      'Average Change Between Time Points' = 'meanChangeTimepoint',
+                                                      'Median Change Between Time Points' = 'medianChangeTimepoint',
+                                                      'Mean Change Across Full Trial' = 'meanChangeOverall',
+                                                      'Median Change Across Full Trial' = 'medianChangeOverall'),
+                                          selected = 'meanByTimePoint'
                                           ),
                               selectInput(inputId = 'graphTypeLongitudinal',
                                           label = 'Type of Graph',
-                                          choices = c('boxPlot',
-                                                      'summaryLine',
-                                                      'scatter'),
+                                          choices = list("Box Plot" = 'boxPlot',
+                                                      "Summary Line" = 'summaryLine',
+                                                      "Scatter Plot" = 'scatter'),
                                           selected = 'boxPlot')
                               ),
                           box(status = 'primary',
@@ -133,13 +145,13 @@ ui <- dashboardPage(
                               box(status = 'primary',
                                   solidHeader = T,
                                   width = 12,
-                                  title = "Graph",
+                                  title = "Plot of Aggregate Measurements Across the Trial",
                                   plotOutput('longitudinalGraph')
                                   ),
                               box(status = 'primary',
                                   solidHeader = T,
                                   width = 12,
-                                  title = "Tables",
+                                  title = "Summary Statistics Using The Selected Type of Aggregation",
                                   tableOutput('longitudinalTable')
                                   )
                               )

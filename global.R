@@ -3,8 +3,19 @@ library(dplyr)
 library(ggplot2)
 library(forcats)
 library(data.table)
+library(reshape2)
 
-setwd("~/Documents/GitHub/ShinyProgrammingExercise")
+sourceDir = function(path, trace = TRUE,...) {
+  for (nm in list.files(path, pattern = "\\.[RrSsQq]$")) {
+    if(trace) cat(nm,":")
+    source(file.path(path, nm), ...)
+    if(trace) cat("\n")
+  }
+}
+
+sourceDir(path = "appFunctions/tab1Functions")
+sourceDir(path = "appFunctions/tab2Functions")
+
 PatientLevelInfo = fread("Random_PatientLevelInfo_2020.tsv", stringsAsFactors = T)
 LabValuesInfo = fread("Random_LabValuesInfo_2020.tsv", stringsAsFactors = T)
 
@@ -24,7 +35,7 @@ PatientLevelInfo$ACTARM = recode(PatientLevelInfo$ACTARM,
                                  `B: Placebo` = "placebo",
                                  `C: Combination` = "combination"
                                  ) 
-PatientLevelInfo$ACTARM = forcats::fct_relevel(PatientLevelInfo$ACTARM,"placebo")
+PatientLevelInfo$ACTARM = fct_relevel(PatientLevelInfo$ACTARM,"placebo")
 
 #Change the naming scheme of PatientLevelInfo to begin with lowercase and capitalize each subsequent concactenated word
 #USUBJID remains the same because we will use it join LabValuesInfo and PatientLevelInfo
@@ -45,7 +56,7 @@ PatientLevelInfo = PatientLevelInfo %>%
 
 PatientByVisit = LabValuesInfo %>% 
   #make screening the first level of ALT
-  mutate(AVISIT = forcats::fct_relevel(AVISIT,"SCREENING")) %>% 
+  mutate(AVISIT = fct_relevel(AVISIT,"SCREENING")) %>% 
   group_by(USUBJID,AVISIT) %>%
   #Collect lab values by patient + visit 
   summarise(ALT = AVAL[which(LBTESTCD == 'ALT')],
@@ -95,4 +106,4 @@ TrialFrame$secondBiomarker = recode(TrialFrame$secondBiomarker, 'LOW' = 'Low',
                                     'HIGH' = 'High'
                                     )
 
-TrialFrame$secondBiomarker = forcats::fct_relevel(TrialFrame$secondBiomarker,"Low","Medium","High")
+TrialFrame$secondBiomarker = fct_relevel(TrialFrame$secondBiomarker,"Low","Medium","High")

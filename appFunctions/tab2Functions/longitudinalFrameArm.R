@@ -1,7 +1,3 @@
-names(drugXFrame)
-
-longitudinalFrameArm(newFrame,measurementType = "medianByTimepoint")
-
 longitudinalFrameArm = function(filteredData,measurementType){
   if(length(grep("mean",measurementType)) > 0){
     summaryFrame = filteredData %>%
