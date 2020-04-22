@@ -86,15 +86,8 @@ names(PatientByVisit) = c("USUBJID","ALT","CRP","IGA","firstBiomarker","secondBi
 TrialFrame = left_join(PatientLevelInfo,PatientByVisit,by = 'USUBJID') %>%
   mutate_if(is.integer,as.numeric)
 
-#Global Frame for each tab so that it does not need to perform these operations when selected characteristics change
-screeningFrame = TrialFrame %>% filter(daysFromBaseline == -1)
 
-noScreenFrame = TrialFrame %>% 
-  filter(daysFromBaseline >= 0) %>%
-  mutate(daysFromBaseline = as.factor(daysFromBaseline))
-
-#Need to go back to following naming conventions on the race variable
-summary(TrialFrame$race)
+#Changing the ordering and vlaues of some factor levels to be better formatted
 
 TrialFrame$sex = recode(TrialFrame$sex,'F' = 'Female',
                         'M' = 'Male',
@@ -107,3 +100,11 @@ TrialFrame$secondBiomarker = recode(TrialFrame$secondBiomarker, 'LOW' = 'Low',
                                     )
 
 TrialFrame$secondBiomarker = fct_relevel(TrialFrame$secondBiomarker,"Low","Medium","High")
+
+
+#Global Frame for each tab so that it does not need to perform these operations when selected characteristics change
+screeningFrame = TrialFrame %>% filter(daysFromBaseline == -1)
+
+noScreenFrame = TrialFrame %>% 
+  filter(daysFromBaseline >= 0) %>%
+  mutate(daysFromBaseline = as.factor(daysFromBaseline))

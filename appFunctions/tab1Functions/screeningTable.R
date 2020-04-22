@@ -1,6 +1,6 @@
 screeningTable = function(screeningData = screeningFrame,globalCovariate,selCovariate){
-  selCovariate = rlang::sym(selCovariate)
   if(class(screeningData[[selCovariate]]) == 'numeric'){
+    selCovariate = rlang::sym(selCovariate)
     if(globalCovariate == "Yes"){
       byArmSummary = screeningFrame %>%
         group_by(treatmentArm) %>%
@@ -40,11 +40,11 @@ screeningTable = function(screeningData = screeningFrame,globalCovariate,selCova
     }
   }else if(class(screeningData[[selCovariate]]) == 'factor'){
     if(globalCovariate == "Yes"){
-      byArmTable = round(prop.table(table(screeningFrame[['treatmentArm']],screeningFrame[[selCovariate]])),3)
+      byArmTable = round(prop.table(margin = 1, table(screeningFrame[['treatmentArm']],screeningFrame[[selCovariate]])),3)
       overallTable = round(prop.table(table(screeningFrame[[selCovariate]])),3)
       screenTable = rbind(byArmTable,overallTable)
     }else if(globalCovariate == "No"){
-      screenTable = round(prop.table(table(screeningFrame[['treatmentArm']],screeningFrame[[selCovariate]])),3)
+      screenTable = round(prop.table(margin = 1,table(screeningFrame[['treatmentArm']],screeningFrame[[selCovariate]])),3)
     }
   }
   return(screenTable)
