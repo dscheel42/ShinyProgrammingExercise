@@ -56,19 +56,12 @@ function(session,input,output){
   output$tableLongitudinalTitle = renderText({
     if(input$betweenWithin == "betweenArms"){
       paste("Table of ", names(which(aggList == input$measurementType)), " for ",
-          input$selectedValue, "Across Treatment Groups", sep = "")
+          input$selectedValue, " Across Treatment Groups", sep = "")
     }else if(input$betweenWithin == "withinArm"){
       paste("Table of ", names(which(aggList == input$measurementType)), " for ",
             "Lab Measurements in ", input$selTreatmentArm, sep = "")      
     }
   })
-  
-  aggList = list('Average At Each Time Point' = 'meanByTimepoint',
-       'Median At Each Time Point' = 'medianByTimepoint',
-       'Average Change Between Time Points' = 'meanChangeTimepoint',
-       'Median Change Between Time Points' = 'medianChangeTimepoint',
-       'Mean Change Across Full Trial' = 'meanChangeOverall',
-       'Median Change Across Full Trial' = 'medianChangeOverall')  
     
   output$longitudinalGraph = renderPlot({
     if(input$betweenWithin == "betweenArms"){
@@ -103,5 +96,17 @@ function(session,input,output){
                                )
     }
     colnames(p) = c("Day 0","Day 7","Day 14","Day 21", "Day 28")
-    datatable(p,options = list(searching = FALSE, paging = FALSE,sorting = F))})
+    datatable(p,options = list(searching = FALSE, paging = FALSE,sorting = F))
+    })
+  
+  output$recordsTable = renderDataTable({
+    recordsFrame = filteredData() %>% 
+      mutate_if(is.numeric,function(x) round(x,3)) %>%
+      select(patientId,treatmentArm,
+             daysFromBaseline,ALT,CRP,
+             IGA,firstBiomarker,secondBiomarker
+             )
+    datatable(recordsFrame,rownames = FALSE)
+  })
+  
 }

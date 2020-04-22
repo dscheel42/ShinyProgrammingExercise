@@ -115,6 +115,13 @@ noScreenFrame = TrialFrame %>%
   filter(daysFromBaseline >= 0) %>%
   mutate(daysFromBaseline = as.factor(daysFromBaseline))
 
+aggList = list('Average At Each Time Point' = 'meanByTimepoint',
+               'Median At Each Time Point' = 'medianByTimepoint',
+               'Average Change Between Time Points' = 'meanChangeTimepoint',
+               'Median Change Between Time Points' = 'medianChangeTimepoint',
+               'Mean Change Across Full Trial' = 'meanChangeOverall',
+               'Median Change Across Full Trial' = 'medianChangeOverall')
+
 # names(TrialFrame)
 
 # variableDisplayNames = data.frame(shortname = c("age","sex","race","treatmentArm",

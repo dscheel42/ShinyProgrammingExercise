@@ -153,12 +153,28 @@ ui <- dashboardPage(
                                   title = textOutput("graphLongitudinalTitle"),
                                   plotOutput('longitudinalGraph')
                                   ),
-                              box(status = 'primary',
-                                  solidHeader = T,
-                                  width = 12,
-                                  title = textOutput("tableLongitudinalTitle"),
-                                  dataTableOutput('longitudinalTable')
-                                  )
+                              tabBox(width = 12,
+                                tabPanel(title = 'Summary Table',
+                                         width = 12,
+                                         fluidRow(
+                                           box(status = 'primary',
+                                               solidHeader = T,
+                                               width = 12,
+                                               title = textOutput("tableLongitudinalTitle"),
+                                               dataTableOutput('longitudinalTable')
+                                               )
+                                           )
+                                         ),
+                                tabPanel(title = 'Records',
+                                         width = 12,
+                                         fluidRow(status = 'primary',
+                                                  solidHeader = T,
+                                                  width = 12,
+                                                  title = 'Records for Filtered Data',
+                                                  dataTableOutput('recordsTable')
+                                                  )
+                                         )
+                                )
                               )
                           )
                  )
