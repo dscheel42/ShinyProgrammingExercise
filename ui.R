@@ -57,7 +57,11 @@ ui <- dashboardPage(
                                                           "Biomarker 1" = "firstBiomarker",
                                                           "Biomarker 2" = "secondBiomarker"
                                                           ),
-                                           selected = "age")
+                                           selected = "age"),
+                              selectInput(inputId = 'countOrProportion',
+                                          label = "Table Display Format",
+                                          choices = c("Count","Proportion"),
+                                          selected = "Count")
                               ),
                           box(status = 'primary',
                               solidHeader = T,
@@ -66,14 +70,14 @@ ui <- dashboardPage(
                               box(status = 'primary',
                                   solidHeader = T,
                                   width = 12,
-                                  title = "Distribution Plot",
+                                  title = textOutput('graphTitle'),
                                   plotOutput('selScreeningGraph')
                                   ),
                               box(status = 'primary',
                                   solidHeader = T,
                                   width = 12,
-                                  title = "Summary Table",
-                                  tableOutput('selScreeningTable')
+                                  title = textOutput('tableTitle'),
+                                  dataTableOutput('selScreeningTable')
                                   )
                               )
                           )
@@ -95,9 +99,9 @@ ui <- dashboardPage(
                                 selectInput(inputId = 'selTreatmentArm',
                                             label = "Treatment Arm",
                                             choices = list("All" = "All",
-                                                           "Placebo" = "placebo",
-                                                           "Drug X" = "drugX",
-                                                           "Combination" = "combination"),
+                                                           "Placebo" = "Arm B: Placebo",
+                                                           "Drug X" = "Arm A: Drug X",
+                                                           "Combination" = "Arm C: Combination"),
                                             selected = c("All")
                                             )
                                 ),

@@ -6,12 +6,22 @@ function(session,input,output){
                    globalCovariate = input$globalCovariate,
                    selCovariate = input$selCovariate)
   })
-  output$selScreeningTable = renderTable({
-    screeningTable(screeningData = screeningFrame,
+  
+  output$graphTitle = renderText({
+    paste("Distribution Plot of ",input$selCovariate," Across Treatment Arms",sep = "")
+  })
+  
+  output$tableTitle = renderText({
+    paste("Summary Table for ", input$selCovariate)
+  })
+  
+  output$selScreeningTable = renderDataTable(
+    datatable(screeningTable(screeningData = screeningFrame,
                    globalCovariate = input$globalCovariate,
-                   selCovariate = input$selCovariate)
-  },
-  rownames = T)
+                   selCovariate = input$selCovariate,
+                   countOrProportion = input$countOrProportion),
+    options = list(searching = FALSE, paging = FALSE))
+  )
   
   filteredData = reactive({
     selFrame = noScreenFrame %>% 
