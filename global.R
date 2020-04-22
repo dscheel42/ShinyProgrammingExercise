@@ -1,11 +1,11 @@
-packrat::on()
-
+library(shiny)
 library(shinydashboard)
 library(dplyr)
 library(ggplot2)
 library(forcats)
 library(data.table)
 library(reshape2)
+library(DT)
 
 sourceDir = function(path, trace = TRUE,...) {
   for (nm in list.files(path, pattern = "\\.[RrSsQq]$")) {
@@ -121,15 +121,3 @@ aggList = list('Average At Each Time Point' = 'meanByTimepoint',
                'Median Change Between Time Points' = 'medianChangeTimepoint',
                'Mean Change Across Full Trial' = 'meanChangeOverall',
                'Median Change Across Full Trial' = 'medianChangeOverall')
-
-# names(TrialFrame)
-
-# variableDisplayNames = data.frame(shortname = c("age","sex","race","treatmentArm",
-#                                                 "ALT","CRP","IGA","firstBiomarker",
-#                                                 "secondBiomarker","diffALT","diffCRP",
-#                                                 "diffIGA","daysFromBaseline",
-#                                                 "endDiffBaselineALT","endDiffBaselineCRP",
-#                                                 "endDiffBaselineIGA"))
-# 
-# variableDisplayNames$longname = c("Age","Sex","Race","Treatment Arm",
-#                                   "")
