@@ -1,9 +1,4 @@
-library(shinydashboard)
-library(dplyr)
-library(ggplot2)
-library(forcats)
-library(data.table)
-library(reshape2)
+packrat::on()
 
 sourceDir = function(path, trace = TRUE,...) {
   for (nm in list.files(path, pattern = "\\.[RrSsQq]$")) {
