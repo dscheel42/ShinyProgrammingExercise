@@ -42,6 +42,34 @@ function(session,input,output){
   })
   
   #Tab2 Longitudinal Analysis
+  
+  output$graphLongitudinalTitle = renderText({
+    if(input$betweenWithin == "betweenArms"){
+      paste("Graph of ", names(which(aggList == input$measurementType)), " for ",
+          input$selectedValue, " Across Treatment Groups", sep = "")
+    }else if(input$betweenWithin == "withinArm"){
+      paste("Graph of ", names(which(aggList == input$measurementType)), " for ",
+            "Lab Measurements in ", input$selTreatmentArm, sep = "")
+      }
+  })
+  
+  output$tableLongitudinalTitle = renderText({
+    if(input$betweenWithin == "betweenArms"){
+      paste("Table of ", names(which(aggList == input$measurementType)), " for ",
+          input$selectedValue, "Across Treatment Groups", sep = "")
+    }else if(input$betweenWithin == "withinArm"){
+      paste("Table of ", names(which(aggList == input$measurementType)), " for ",
+            "Lab Measurements in ", input$selTreatmentArm, sep = "")      
+    }
+  })
+  
+  aggList = list('Average At Each Time Point' = 'meanByTimepoint',
+       'Median At Each Time Point' = 'medianByTimepoint',
+       'Average Change Between Time Points' = 'meanChangeTimepoint',
+       'Median Change Between Time Points' = 'medianChangeTimepoint',
+       'Mean Change Across Full Trial' = 'meanChangeOverall',
+       'Median Change Across Full Trial' = 'medianChangeOverall')  
+    
   output$longitudinalGraph = renderPlot({
     if(input$betweenWithin == "betweenArms"){
       p=longitudinalGraph(filteredData = filteredData(),
@@ -60,7 +88,7 @@ function(session,input,output){
     p
   })
   
-  output$longitudinalTable = renderTable({
+  output$longitudinalTable = renderDataTable({
     if(input$betweenWithin == "betweenArms"){
       p = longitudinalFrame(filteredData = filteredData(),
                             selectedValue = input$selectedValue,
@@ -74,9 +102,6 @@ function(session,input,output){
                                measurementType = input$measurementType
                                )
     }
-    p
-  },
-  rownames = T,
-  caption = "Days From Baseline",
-  caption.placement = "top")
+    colnames(p) = c("Day 0","Day 7","Day 14","Day 21", "Day 28")
+    datatable(p,options = list(searching = FALSE, paging = FALSE,sorting = F))})
 }

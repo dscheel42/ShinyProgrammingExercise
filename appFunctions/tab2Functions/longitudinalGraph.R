@@ -1,4 +1,12 @@
 longitudinalGraph = function(filteredData,selectedValue,measurementType,graphTypeLongitudinal){
+  if(selectedValue == "ALT"){
+    ylabel = "ALT U/L"
+  }else if(selectedValue == "CRP"){
+    ylabel = "CRP mg/L"
+  }else if(selectedValue == "IGA"){
+    ylabel = "IGA g/L"
+  }
+  
   if(measurementType %in% c('meanByTimepoint','medianByTimepoint')){
     selectedValue = selectedValue
   }else if(measurementType %in% c('meanChangeTimepoint','medianChangeTimepoint')){
@@ -26,13 +34,6 @@ longitudinalGraph = function(filteredData,selectedValue,measurementType,graphTyp
                        ) +
       stat_summary(fun = 'mean',geom='point') +
       stat_summary(fun = 'mean',geom='line')
-  }
-  if(selectedValue == "ALT"){
-    ylabel = "ALT U/L"
-  }else if(selectedValue == "CRP"){
-    ylabel = "CRP mg/L"
-  }else if(selectedValue == "IGA"){
-    ylabel = "IGA g/L"
   }
   
   longGraph = longGraph  +

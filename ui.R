@@ -150,14 +150,14 @@ ui <- dashboardPage(
                               box(status = 'primary',
                                   solidHeader = T,
                                   width = 12,
-                                  title = "Plot of Aggregate Measurements Across the Trial",
+                                  title = textOutput("graphLongitudinalTitle"),
                                   plotOutput('longitudinalGraph')
                                   ),
                               box(status = 'primary',
                                   solidHeader = T,
                                   width = 12,
-                                  title = "Summary Statistics Using The Selected Type of Aggregation",
-                                  tableOutput('longitudinalTable')
+                                  title = textOutput("tableLongitudinalTitle"),
+                                  dataTableOutput('longitudinalTable')
                                   )
                               )
                           )
