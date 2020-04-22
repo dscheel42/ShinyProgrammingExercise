@@ -24,8 +24,20 @@ longitudinalGraph = function(filteredData,selectedValue,measurementType,graphTyp
                                                        colour = "treatmentArm",
                                                        group = "treatmentArm")
                        ) +
-      stat_summary(fun.y = 'mean',geom='point') +
-      stat_summary(fun.y = 'mean',geom='line')
+      stat_summary(fun = 'mean',geom='point') +
+      stat_summary(fun = 'mean',geom='line')
   }
+  if(selectedValue == "ALT"){
+    ylabel = "ALT U/L"
+  }else if(selectedValue == "CRP"){
+    ylabel = "CRP mg/L"
+  }else if(selectedValue == "IGA"){
+    ylabel = "IGA g/L"
+  }
+  
+  longGraph = longGraph  +
+    scale_colour_discrete(name = 'Treatment Arm') +
+    xlab('Days From Baseline') +
+    ylab(ylabel)
   return(longGraph)
 }

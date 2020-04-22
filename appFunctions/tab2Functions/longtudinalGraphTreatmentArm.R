@@ -37,8 +37,14 @@ longitudinalGraphArm = function(filteredData,graphTypeLongitudinal){
                                                        colour = "LabTest",
                                                        group = "LabTest")
                        ) +
-      stat_summary(fun.y = 'mean',geom='point') +
-      stat_summary(fun.y = 'mean',geom='line')
+      stat_summary(fun = 'mean',geom='point') +
+      stat_summary(fun = 'mean',geom='line')
   }
+
+  longGraph = longGraph +
+    scale_colour_discrete(name = 'Laboratory Test') +
+    xlab('Days From Baseline') +
+    ylab('Labatory Value')  
+  
   return(longGraph)
 }

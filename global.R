@@ -1,3 +1,5 @@
+packrat::on()
+
 library(shinydashboard)
 library(dplyr)
 library(ggplot2)
@@ -16,6 +18,7 @@ sourceDir = function(path, trace = TRUE,...) {
 sourceDir(path = "appFunctions/tab1Functions")
 sourceDir(path = "appFunctions/tab2Functions")
 
+
 PatientLevelInfo = fread("Random_PatientLevelInfo_2020.tsv", stringsAsFactors = T)
 LabValuesInfo = fread("Random_LabValuesInfo_2020.tsv", stringsAsFactors = T)
 
@@ -30,14 +33,7 @@ PatientLevelInfo$patientId = splitFrame[[5]]
 
 #Recode a treatment arm variable to be a single word describing treatment
 
-PatientLevelInfo$ACTARM = recode(PatientLevelInfo$ACTARM,
-                                 `A: Drug X` = "drugX",
-                                 `B: Placebo` = "placebo",
-                                 `C: Combination` = "combination"
-                                 ) 
-PatientLevelInfo$ACTARM = fct_relevel(PatientLevelInfo$ACTARM,"placebo")
-
-#Change the naming scheme of PatientLevelInfo to begin with lowercase and capitalize each subsequent concactenated word
+#Change the variable naming scheme of PatientLevelInfo to begin with lowercase and capitalize each subsequent concactenated word
 #USUBJID remains the same because we will use it join LabValuesInfo and PatientLevelInfo
 
 names(PatientLevelInfo) = c("studyId","USUBJID","age","sex","race","treatmentArm","actArmCd","region","patientId")
@@ -74,7 +70,7 @@ PatientByVisit = LabValuesInfo %>%
          endDiffBaselineALT = ALT[which(VISIT_NUM == 5)] - ALT[which(VISIT_NUM == 0)],
          endDiffBaselineCRP = CRP[which(VISIT_NUM == 5)] - CRP[which(VISIT_NUM == 0)],
          endDiffBaselineIGA = IGA[which(VISIT_NUM == 5)] - IGA[which(VISIT_NUM == 0)]
-         ) %>%
+  ) %>%
   select(-c("VISIT_NUM","AVISIT"))
 
 names(PatientByVisit) = c("USUBJID","ALT","CRP","IGA","firstBiomarker","secondBiomarker",
@@ -89,17 +85,27 @@ TrialFrame = left_join(PatientLevelInfo,PatientByVisit,by = 'USUBJID') %>%
 
 #Changing the ordering and vlaues of some factor levels to be better formatted
 
-TrialFrame$sex = recode(TrialFrame$sex,'F' = 'Female',
-                        'M' = 'Male',
-                        'UNDIFFERENTIATED' = 'Undifferentiated'
-                        )
+#Changing the factor variable values to be formatted for the application display
 
-TrialFrame$secondBiomarker = recode(TrialFrame$secondBiomarker, 'LOW' = 'Low',
-                                    'MEDIUM' = 'Medium',
-                                    'HIGH' = 'High'
-                                    )
+#dplyr::glimpse(TrialFrame %>% select_if(is.factor))
 
-TrialFrame$secondBiomarker = fct_relevel(TrialFrame$secondBiomarker,"Low","Medium","High")
+
+TrialFrame = TrialFrame %>%
+  mutate(sex = recode_factor(sex,
+                             'F' = 'Female',
+                             'M' = 'Male',
+                             'UNDIFFERENTIATED' = 'Undifferentiated'),
+         race = as.factor(paste(stringr::str_to_title(race))),
+         secondBiomarker = recode_factor(secondBiomarker,
+                                         "LOW" = 'Low',
+                                         "MEDIUM" = 'Medium',
+                                         "HIGH" = 'High'),
+         treatmentArm = recode_factor(treatmentArm,
+                                      'A: Drug X' = 'Arm A: Drug X',
+                                      'B: Placebo' = 'Arm B: Placebo',
+                                      'C: Combination' = 'Arm C: Combination'
+                                      )
+         )
 
 
 #Global Frame for each tab so that it does not need to perform these operations when selected characteristics change
@@ -108,3 +114,15 @@ screeningFrame = TrialFrame %>% filter(daysFromBaseline == -1)
 noScreenFrame = TrialFrame %>% 
   filter(daysFromBaseline >= 0) %>%
   mutate(daysFromBaseline = as.factor(daysFromBaseline))
+
+# names(TrialFrame)
+
+# variableDisplayNames = data.frame(shortname = c("age","sex","race","treatmentArm",
+#                                                 "ALT","CRP","IGA","firstBiomarker",
+#                                                 "secondBiomarker","diffALT","diffCRP",
+#                                                 "diffIGA","daysFromBaseline",
+#                                                 "endDiffBaselineALT","endDiffBaselineCRP",
+#                                                 "endDiffBaselineIGA"))
+# 
+# variableDisplayNames$longname = c("Age","Sex","Race","Treatment Arm",
+#                                   "")
