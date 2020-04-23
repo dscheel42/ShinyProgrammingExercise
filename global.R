@@ -1,5 +1,6 @@
-packrat::on()
+#packrat::off()
 #packrat::restore()
+#packrat:on()
 
 library(shiny)
 library(shinydashboard)
