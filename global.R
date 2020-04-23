@@ -1,3 +1,7 @@
+#packrat::off()
+#packrat::restore()
+#packrat:on()
+
 library(shiny)
 library(shinydashboard)
 library(dplyr)
@@ -6,6 +10,7 @@ library(forcats)
 library(data.table)
 library(reshape2)
 library(DT)
+library(stringr)
 
 sourceDir = function(path, trace = TRUE,...) {
   for (nm in list.files(path, pattern = "\\.[RrSsQq]$")) {
