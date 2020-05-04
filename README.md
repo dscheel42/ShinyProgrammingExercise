@@ -1,5 +1,5 @@
 # ShinyProgrammingExercise
- Shiny application to examine the resultant data from a simulated clinical trial.
+ Shiny application to examine the resultant data from a simulated clinical trial (not real patient data)
  
  The following Shiny application is built to examine the resultant data from a simulated clinical trial in which there were three treatment arms: Drug X, Combination, and Placebo.  Patient demographics and two biomarkers were recorded at the start of the trial (or at screening).  A patient's laboratory measurements for ALT, CRP, IGA were recorded during screening, baseline, and 4 additional times each one week apart ollowing baseline.  
  
@@ -8,3 +8,5 @@
  In the second tab graphs and tables are provided to see the overall change across the trial.  This can be done either looking at a specific treatment arm and seeing how the laboratory measurements evolve alongside each other or between treatment arms looking at how the change in measurements varies across groups.
  
  
+Application hosted at 
+https://dscheel42.shinyapps.io/ShinyProgrammingExercise-master/
